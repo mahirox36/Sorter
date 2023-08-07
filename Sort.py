@@ -74,8 +74,6 @@ while True:
                             break
                         os.rename(k, f"{main}/{vaalue}/{j}")
                         break
-                    else:
-                        os.rename(k, f"{main}/{vaalue}/{j}")
-                        break
+                        
 
     time.sleep(data["Time"])
