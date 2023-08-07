@@ -62,7 +62,7 @@ while True:
                 for key, vaalue in data["Files"].items():
                     os.makedirs(f"{main}/{vaalue}",exist_ok=True)
                     if j.endswith(key):
-                        if os.path.exists(k):
+                        if os.path.exists(f"{main}/{vaalue}/{j}"):
                             j = j.split(".")
                             last_item = j[-1]
                             j.remove(last_item)
@@ -72,6 +72,9 @@ while True:
                             j = f"{h}0.{last_item}"
                             os.rename(k, f"{main}/{vaalue}/{j}")
                             break
+                        os.rename(k, f"{main}/{vaalue}/{j}")
+                        break
+                    else:
                         os.rename(k, f"{main}/{vaalue}/{j}")
                         break
 
