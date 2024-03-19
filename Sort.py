@@ -81,7 +81,7 @@ def main():
                                 os.rename(filepath, os.path.join(main_folder_path, destination_folder, f"{filename_base} ({counter}).{filename_ext}"))
                             else:
                                 os.rename(filepath, new_filepath)
-        # time.sleep(data["Time"])
+        time.sleep(data["Time"])
 
 if __name__ == "__main__":
     main()
