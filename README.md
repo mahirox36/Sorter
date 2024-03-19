@@ -2,23 +2,17 @@
 This App Will Sort Your Files In Folders
 
 ## Requirements
-Python 3.10 or higher
 Windows Operating System
 
 
 ## How to use
-1.
-Download the latest version of the Sorter App from the [releases page](https://github.com/Unziv/Sorter/releases).
-2.
-Extract the downloaded file to a directory of your choice.
-3.
-Double click on the ```Sorter.exe``` file to start the app.
-4.
-If you are prompted to enter a time interval, enter the number of seconds you want the app to wait before sorting again. The default value is 60 seconds.
-5.
-To adjust the settings, you need to modify the ```data.json``` file located at ```C:/Users/{username}/Documents/Sorter/data.json```.
-6.
-That's it! The app will now sort your files into folders according to the settings.
+1. Download the latest version of the Sorter App from the [releases page](https://github.com/Unziv/Sorter/releases).
+2. Extract the downloaded file to a directory of your choice.
+3. Double click on the ```Sorter.exe``` file to start the Installer.
+4. Install The App.
+5. To adjust the settings, you need to modify the ```data.json``` file located at ```C:/Users/{username}/Documents/Sorter/data.json```.
+6. That's it! The app will now sort your files into folders according to the settings.
+7. If you want portable Version You can See file called ```Sorter_portable.exe```
 
 
 ## How it works
