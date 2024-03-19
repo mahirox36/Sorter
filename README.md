@@ -8,7 +8,7 @@ Windows Operating System
 ## How to use
 1. Download the latest version of the Sorter App from the [releases page](https://github.com/Unziv/Sorter/releases).
 2. Extract the downloaded file to a directory of your choice.
-3. Double click on the ```Sorter.exe``` file to start the Installer.
+3. Double click on the ```Sorter_Installer.exe``` file to start the Installer.
 4. Install The App.
 5. To adjust the settings, you need to modify the ```data.json``` file located at ```C:/Users/{username}/Documents/Sorter/data.json```.
 6. That's it! The app will now sort your files into folders according to the settings.
