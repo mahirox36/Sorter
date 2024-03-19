@@ -21,10 +21,10 @@ To adjust the settings, you need to modify the data.json file located at C:/User
 That's it! The app will now sort your files into folders according to the settings.
 
 
-##How it works
+## How it works
 The Sorter App scans the specified folders and looks for files with the specified extensions. It then renames the files to include a unique number, if a file with the same name already exists in the destination folder. This process is repeated until a unique name is found for the file.
 
-##Contributing
+## Contributing
 If you find a bug or have an idea for a new feature, please open an issue or a pull request on the GitHub repository.
 
 ## License
