@@ -6,8 +6,9 @@ import math
 
 def main():
     username = getpass.getuser()
-    filedata = f"C:/Users/{username}/Documents/Sorter/data.json"
-    os.makedirs(f"C:/Users/{username}/Documents/Sorter", exist_ok=True)
+    documents_folder = os.path.expanduser("~/Documents")
+    filedata = f"{documents_folder}/Sorter/data.json"
+    os.makedirs(f"{documents_folder}/Sorter", exist_ok=True)
     data = {
         "Comments": [
             "You Can Change The Files sort and the Folder names",
@@ -17,7 +18,7 @@ def main():
             "the app will do it for you",
             "And if you want to change the time to sort",
             "like every 20 sec or 60 sec or 120 sec",
-            "it's Only sec, The Defult 60 sec",
+            "it's Only sec, The Default 60 sec",
             "so that's it BYE",
             "Discord: unziv",
             "Youtube: Unziv"
@@ -37,7 +38,7 @@ def main():
             ".png": "Images",
             ".jpg": "Images",
             ".jpeg": "Images",
-            ".pdf": "Pdfs",
+            ".pdf": "PDF",
             ".exe": "Apps",
             ".zip": "Zips",
             ".gif": "gifs",
@@ -59,9 +60,12 @@ def main():
         ],
         "Time": 60
     }
-
-    with open(filedata, "r") as file_object:
-        data = json.load(file_object)
+    if os.path.exists(filedata):
+        with open(filedata, "r") as file_object:
+            data = json.load(file_object)
+    else:
+        with open(filedata, "w") as file_object:
+            json.dump(data, file_object)
 
     while True:
         main_folder_path = data["Main Folder Path"]
