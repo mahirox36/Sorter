@@ -4,7 +4,10 @@ import json
 import time
 import getpass
 import math
+import win10toast
 
+toaster = win10toast.ToastNotifier()
+toaster.show_toast("Sorter", "The App is Running!", duration=10)
 def main():
     username = getpass.getuser()
     documents_folder = os.path.expanduser("~/Documents")
@@ -66,7 +69,7 @@ def main():
             data = json.load(file_object)
     else:
         with open(filedata, "w") as file_object:
-            json.dump(data, file_object)
+            json.dump(data, file_object,indent=4)
 
     while True:
         main_folder_path = data["Main Folder Path"]
