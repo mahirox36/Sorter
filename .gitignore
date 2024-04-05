@@ -10,3 +10,4 @@ upload.bat
 output/
 *.iss
 settings.json
+make.py
