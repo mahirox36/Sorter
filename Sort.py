@@ -1,4 +1,4 @@
-__version__ = "1.6.0"
+__version__ = "1.7.0"
 import os
 import json
 import time
@@ -6,9 +6,10 @@ import getpass
 import math
 import win10toast
 
-toaster = win10toast.ToastNotifier()
-toaster.show_toast("Sorter", "The App is Running!", duration=10)
+
 def main():
+    toaster = win10toast.ToastNotifier()
+    toaster.show_toast("Sorter", "The App is Running!", duration=10)
     username = getpass.getuser()
     documents_folder = os.path.expanduser("~/Documents")
     filedata = f"{documents_folder}/Sorter/data.json"
