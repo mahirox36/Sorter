@@ -4,14 +4,24 @@ import json
 import pathlib
 import time
 import getpass
+from tkinter import messagebox
 import sys
 import threading
 from PIL import Image
 from pystray import MenuItem as item
 import pystray
+import psutil
 # import win10toast
 
 Shutdown = False
+
+def create_popup(title ,message, status:str = "info"):
+    if status == "info":
+        messagebox.showinfo(title, message)
+    elif status == "warning":
+        messagebox.showwarning(title, message)
+    elif status == "error":
+        messagebox.showerror(title, message)
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -56,6 +66,15 @@ def filepath_appdata(filename="Sorter/data.json"):
     appdata_folder = pathlib.Path(os.environ["APPDATA"])
     file_path = appdata_folder / filename
     return file_path
+
+
+def is_app_already_running():
+    """ Check if the app is already running. """
+    for proc in psutil.process_iter(['name']):
+        if proc.name() == "Sorter.exe":
+            return True
+    return False
+
 
 def main():
     # toaster = win10toast.ToastNotifier()
@@ -166,12 +185,15 @@ def on_quit():
     thread.join()
 
 if __name__ == "__main__":
-    thread = threading.Thread(target=main)
-    thread.start()
-    image = Image.open(resource_path("icon.ico"))
-    menu = (
-        item('Settings', on_settings),
-        item('Quit', on_quit)
-        )
-    icon = pystray.Icon("Sorter", image, "Sorter", menu)
-    icon.run()
+    if is_app_already_running() == True:
+        create_popup("Sorter", "The App is Already Running","warning")
+    else:    
+        thread = threading.Thread(target=main)
+        thread.start()
+        image = Image.open(resource_path("icon.ico"))
+        menu = (
+            item('Settings', on_settings),
+            item('Quit', on_quit)
+            )
+        icon = pystray.Icon("Sorter", image, "Sorter", menu)
+        icon.run()
