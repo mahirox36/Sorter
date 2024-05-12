@@ -96,8 +96,8 @@ def main():
             "like every 20 sec or 60 sec or 120 sec",
             "it's Only sec, The Default 60 sec",
             "so that's it BYE",
-            "Discord: unziv",
-            "Youtube: Unziv"
+            "Discord: mahirox36",
+            "Youtube: @Mahiro36"
         ],
         "Main Folder Path": f"C:/Users/{username}/Desktop/Files",
         "Files": {
@@ -178,13 +178,12 @@ def main():
 
 def open_file(file_path):
     try:
-        os.startfile(filepath_appdata())
+        os.startfile(file_path)
     except Exception as e:
         print("Error opening file:", e)
 
 
 def on_settings():
-    print(filepath_appdata())
     open_file(filepath_appdata())
 def on_quit():
     icon.visible = False
