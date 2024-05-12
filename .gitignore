@@ -11,3 +11,4 @@ output/
 *.iss
 settings.json
 make.py
+icon.*
