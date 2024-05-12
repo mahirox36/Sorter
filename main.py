@@ -74,7 +74,7 @@ def is_app_already_running():
     for proc in psutil.process_iter(['name']):
         if proc.name() == "Sorter.exe":
             count += 1
-    if count > 1:
+    if count > 2:
         return True
     return False
 
