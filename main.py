@@ -144,6 +144,12 @@ def main():
         data = Main_data
 
     while Shutdown == False:
+        data = read_from_appdata()
+        if data != False:
+            pass
+        else:
+            write_to_appdata(Main_data)
+            data = Main_data
         if os.path.exists(data["Main Folder Path"]) == False:
             os.makedirs(data["Main Folder Path"])
         main_folder_path = data["Main Folder Path"]
