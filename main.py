@@ -70,8 +70,10 @@ def filepath_appdata(filename="Sorter/data.json"):
 
 def is_app_already_running():
     """ Check if the app is already running. """
+    count = 0
     for proc in psutil.process_iter(['name']):
-        count += 1
+        if proc.name() == "Sorter.exe":
+            count += 1
     if count > 1:
         return True
     return False
