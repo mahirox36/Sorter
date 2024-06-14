@@ -12,3 +12,4 @@ output/
 settings.json
 make.py
 icon.*
+data/

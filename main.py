@@ -11,8 +11,11 @@ from PIL import Image
 from pystray import MenuItem as item
 import pystray
 import psutil
+from Lib.config import Config
 # import win10toast
-
+appdata_folder = pathlib.Path(os.environ["APPDATA"])
+file_path = os.path.join(appdata_folder, "Mahiro/Sorter/data.json")
+config = Config(file_path)
 Shutdown = False
 
 def create_popup(title ,message, status:str = "info"):
@@ -42,27 +45,8 @@ def create_folder_in_appdata(folder_name):
         os.makedirs(new_folder_path,exist_ok=True)
     except Exception as e:
         print("Error creating folder:", e)
-def write_to_appdata(data, filename="Sorter/data.json"):
-    appdata_folder = pathlib.Path(os.environ["APPDATA"])
-    file_path = appdata_folder / filename
 
-    try:
-        with open(file_path, "w") as file_object:
-            json.dump(data, file_object, indent=4)
-    except Exception as e:
-        print("Error writing to file:", e)
-def read_from_appdata(filename="Sorter/data.json"):
-    appdata_folder = pathlib.Path(os.environ["APPDATA"])
-    file_path = appdata_folder / filename
-
-    try:
-        with open(file_path, "r") as file_object:
-            return json.loads(file_object.read())
-    except FileNotFoundError as e:
-        return False
-    except Exception as e:
-        print("Error writing to file:", e)
-def filepath_appdata(filename="Sorter/data.json"):
+def filepath_appdata(filename="Mahiro/Sorter/data.json"):
     appdata_folder = pathlib.Path(os.environ["APPDATA"])
     file_path = appdata_folder / filename
     return file_path
@@ -78,81 +62,84 @@ def is_app_already_running():
         return True
     return False
 
+def checker(username:str):
+    layout = [
+        "general",
+        "files",
+        "Looking Folders"]
+    try:
+        config.load()
+    except Exception as e:
+        config.set_layout(layout)
+        config["general"].update({
+            "Main Folder Path": f"C:/Users/{username}/Desktop/Files",
+            "Time": 60
+        })
+        config.create_comment("Here You can Change the Main Folder Path and Name",
+                               "general", "Main Folder Path")
+        config.create_comment(f"Default: C:/Users/{username}/Desktop/Files",
+                               "general", "Main Folder Path")
+        config.create_comment("Here You can Change the Time to Sort",
+                               "general", "Time")
+        config.create_comment(f"Default: 60",
+                               "general", "Time")
 
+        config["files"].update({
+                ".txt": "Text Files",
+                ".mp3": "Sounds",
+                ".wav": "Sounds",
+                ".mpeg": "Sounds",
+                ".ogg": "Sounds",
+                ".m4a": "Sounds",
+                ".mp4": "Videos",
+                ".mov": "Videos",
+                ".webm": "Videos",
+                ".mkv": "Videos",
+                ".png": "Images",
+                ".jpg": "Images",
+                ".jpeg": "Images",
+                ".pdf": "PDF",
+                ".exe": "Apps",
+                ".zip": "Zips",
+                ".gif": "gifs",
+                ".ttf": "Fonts",
+                ".msi": "Installers",
+                ".docx": "Word",
+                ".json": "Json",
+                ".xlsx": "Excel",
+                ".xltx": "Excel",
+                ".xls": "Excel",
+                ".jar": "Minecraft/Mods",
+                ".mcaddon": "Minecraft/Addons",
+                ".mcworld": "Minecraft/Worlds",
+                ".mcpack": "Minecraft/Packs"
+            })
+        config.create_comment("Here You can Change the Files sort and the Folder names",
+                              "files", ".txt")
+        config.create_comment("Like.mp3 Go To Folder Called Sounds")
+        config.create_comment(".mp3 --> Sounds")
+        config.create_comment("You can add how many files you want",)
+        config["Looking Folders"]=[
+            f"C:/Users/{username}/Desktop",
+            f"C:/Users/{username}/Downloads"
+        ]
+        config.create_comment("Here You can Change The Looking Folders",
+                              "Looking Folders")
+        config.save()
+    return config.get_data()
 def main():
     # toaster = win10toast.ToastNotifier()
     # toaster.show_toast("Sorter", "The App is Running!", duration=10)
     create_folder_in_appdata("Sorter")
-    
     username = getpass.getuser()
-    Main_data = {
-        "Comments": [
-            "You Can Change The Files sort and the Folder names",
-            "Like.mp3 Go To Folder Called Sounds",
-            ".mp3 --> Sounds",
-            "And You Don't need to close The app to use the new data",
-            "the app will do it for you",
-            "And if you want to change the time to sort",
-            "like every 20 sec or 60 sec or 120 sec",
-            "it's Only sec, The Default 60 sec",
-            "so that's it BYE",
-            "Discord: mahirox36",
-            "Youtube: @Mahiro36"
-        ],
-        "Main Folder Path": f"C:/Users/{username}/Desktop/Files",
-        "Files": {
-            ".txt": "Text Files",
-            ".mp3": "Sounds",
-            ".wav": "Sounds",
-            ".mpeg": "Sounds",
-            ".ogg": "Sounds",
-            ".m4a": "Sounds",
-            ".mp4": "Videos",
-            ".mov": "Videos",
-            ".webm": "Videos",
-            ".mkv": "Videos",
-            ".png": "Images",
-            ".jpg": "Images",
-            ".jpeg": "Images",
-            ".pdf": "PDF",
-            ".exe": "Apps",
-            ".zip": "Zips",
-            ".gif": "gifs",
-            ".ttf": "Fonts",
-            ".msi": "Installers",
-            ".docx": "Word",
-            ".json": "Json",
-            ".xlsx": "Excel",
-            ".xltx": "Excel",
-            ".xls": "Excel",
-            ".jar": "Minecraft/Mods",
-            ".mcaddon": "Minecraft/Addons",
-            ".mcworld": "Minecraft/Worlds",
-            ".mcpack": "Minecraft/Packs"
-        },
-        "Looking Folders": [
-            f"C:/Users/{username}/Desktop",
-            f"C:/Users/{username}/Downloads"
-        ],
-        "Time": 60
-    }
-    data = read_from_appdata()
-    if data != False:
-        pass
-    else:
-        write_to_appdata(Main_data)
-        data = Main_data
-
+    # config.create_comment("Discord: mahirox36") config.create_comment("Youtube: @Mahiro36")
+    data = checker(username)
+    
     while Shutdown == False:
-        data = read_from_appdata()
-        if data != False:
-            pass
-        else:
-            write_to_appdata(Main_data)
-            data = Main_data
-        if os.path.exists(data["Main Folder Path"]) == False:
-            os.makedirs(data["Main Folder Path"])
-        main_folder_path = data["Main Folder Path"]
+        data = checker(username)
+        if os.path.exists(data["general"]["Main Folder Path"]) == False:
+            os.makedirs(data["general"]["Main Folder Path"])
+        main_folder_path = data["general"]["Main Folder Path"]
         for folder in data["Looking Folders"]:
             for file in os.listdir(folder):
                 filepath = os.path.join(folder, file).replace("\\", "/")
@@ -171,7 +158,7 @@ def main():
                                 os.rename(filepath, os.path.join(main_folder_path, destination_folder, f"{filename_base} ({counter}).{filename_ext}"))
                             else:
                                 os.rename(filepath, new_filepath)
-        time.sleep(data["Time"])
+        time.sleep(data["general"]["Time"])
 
 
 
