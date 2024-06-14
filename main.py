@@ -46,9 +46,9 @@ def create_folder_in_appdata(folder_name):
     except Exception as e:
         print("Error creating folder:", e)
 
-def filepath_appdata(filename="Mahiro/Sorter/data.json"):
+def filepath_appdata(filename="Mahiro/Sorter/data.conf"):
     appdata_folder = pathlib.Path(os.environ["APPDATA"])
-    file_path = appdata_folder / filename
+    file_path = os.path.join(appdata_folder, filename).replace("\\", "/")
     return file_path
 
 
