@@ -14,7 +14,7 @@ import psutil
 from Lib.config import Config
 # import win10toast
 appdata_folder = pathlib.Path(os.environ["APPDATA"])
-file_path = os.path.join(appdata_folder, "Mahiro/Sorter/data.json")
+file_path = os.path.join(appdata_folder, "Mahiro/Sorter/data.conf")
 config = Config(file_path)
 Shutdown = False
 
@@ -69,16 +69,16 @@ def checker(username:str):
         "Looking Folders"]
     try:
         config.load()
-    except Exception as e:
+    except FileNotFoundError as e:
         config.set_layout(layout)
         config["general"].update({
-            "Main Folder Path": f"C:/Users/{username}/Desktop/Files",
+            "MainFolderPath": f"C:/Users/{username}/Desktop/Files",
             "Time": 60
         })
         config.create_comment("Here You can Change the Main Folder Path and Name",
-                               "general", "Main Folder Path")
+                               "general", "MainFolderPath")
         config.create_comment(f"Default: C:/Users/{username}/Desktop/Files",
-                               "general", "Main Folder Path")
+                               "general", "MainFolderPath")
         config.create_comment("Here You can Change the Time to Sort",
                                "general", "Time")
         config.create_comment(f"Default: 60",
@@ -116,16 +116,19 @@ def checker(username:str):
             })
         config.create_comment("Here You can Change the Files sort and the Folder names",
                               "files", ".txt")
-        config.create_comment("Like.mp3 Go To Folder Called Sounds")
-        config.create_comment(".mp3 --> Sounds")
-        config.create_comment("You can add how many files you want",)
+        config.create_comment("Like.mp3 Go To Folder Called Sounds",
+                              "files", ".txt")
+        config.create_comment(".mp3 --> Sounds",
+                              "files", ".txt")
+        config.create_comment("You can add how many files you want",
+                              "files", ".txt")
         config["Looking Folders"]=[
             f"C:/Users/{username}/Desktop",
             f"C:/Users/{username}/Downloads"
         ]
         config.create_comment("Here You can Change The Looking Folders",
-                              "Looking Folders")
-        config.save()
+                              "Looking Folders", 0)
+        config.save(True)
     return config.get_data()
 def main():
     # toaster = win10toast.ToastNotifier()
@@ -137,14 +140,14 @@ def main():
     
     while Shutdown == False:
         data = checker(username)
-        if os.path.exists(data["general"]["Main Folder Path"]) == False:
-            os.makedirs(data["general"]["Main Folder Path"])
-        main_folder_path = data["general"]["Main Folder Path"]
+        if os.path.exists(data["general"]["MainFolderPath"]) == False:
+            os.makedirs(data["general"]["MainFolderPath"])
+        main_folder_path = data["general"]["MainFolderPath"]
         for folder in data["Looking Folders"]:
             for file in os.listdir(folder):
                 filepath = os.path.join(folder, file).replace("\\", "/")
                 if os.path.isfile(filepath):
-                    for extension, destination_folder in data["Files"].items():
+                    for extension, destination_folder in data["files"].items():
                         if file.lower().endswith(extension):
                             if os.path.exists(os.path.join(main_folder_path, destination_folder).replace("\\", "/")) == False:
                                 os.makedirs(os.path.join(main_folder_path, destination_folder).replace("\\", "/"))

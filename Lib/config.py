@@ -1,6 +1,7 @@
 import json
 from typing import Any, Dict, List, Union
 
+import os
 class Config:
     """
     This class provides a simple configuration file system with easy usage.
@@ -20,7 +21,7 @@ class Config:
         """
         self.__file = file
         self.__layout = []
-        self.__comments = {'top': []}
+        self.comments = {'top': []}
         self.data = {}
 
     def set_layout(self, layout: List[str]) -> None:
@@ -32,16 +33,19 @@ class Config:
         """
         self.__layout = layout
         self.data = {section: {} for section in layout}
-        self.__comments.update({section: {} for section in layout})
+        self.comments.update({section: {} for section in layout})
 
-    def save(self) -> None:
+    def save(self,create_folder:bool = False) -> None:
         """
         Saves the current configuration data to the specified file.
         """
+        if create_folder:
+            if os.path.exists(self.__file) == False:
+                os.makedirs(os.path.dirname(self.__file).replace("\\", "/"),exist_ok=True)
         lines = []
 
         # Add top-level comments
-        for comment in self.__comments['top']:
+        for comment in self.comments['top']:
             lines.append(f"# {comment}\n")
 
         for section in self.__layout:
@@ -49,8 +53,9 @@ class Config:
             section_data = self.data.get(section, {})
             if isinstance(section_data, dict):
                 for key, value in section_data.items():
-                    if key in self.__comments[section]:
-                        lines.append(f"# {self.__comments[section][key]}\n")
+                    if key in self.comments[section]:
+                        for comment in self.comments[section][key]:
+                            lines.append(f"# {comment}\n")
                     if isinstance(value, str):
                         value = f"\"{value}\""
                     elif not isinstance(value, (int, float, bool)):
@@ -58,6 +63,9 @@ class Config:
                     lines.append(f"{key} = {value}\n")
             elif isinstance(section_data, list):
                 for item in section_data:
+                    if section_data.index(item) in self.comments[section]:
+                        for comment in self.comments[section][section_data.index(item)]:
+                            lines.append(f"# {comment}\n")
                     if isinstance(item, str):
                         item = f"\"{item}\""
                     elif not isinstance(item, (int, float, bool)):
@@ -147,7 +155,7 @@ class Config:
         """
         return self.data
 
-    def create_comment(self, comment: str, section: str = None, key: str = None) -> None:
+    def create_comment(self, comment: str, section: str = None, key: str | int = None) -> None:
         """
         Creates a comment for a specified key in a specified section, or a top-level comment if no section/key is provided.
 
@@ -161,13 +169,16 @@ class Config:
 
         if section is None and key is None:
             # Add a top-level comment
-            self.__comments['top'].append(comment)
+            self.comments['top'].append(comment)
         elif section is not None:
             if section not in self.__layout:
                 raise ValueError(f"'{section}' is not a valid section")
             if key is not None:
-                if key not in self.data[section]:
+                if self.data[section][key] is None:
                     raise ValueError(f"'{key}' is not a valid key in '{section}'")
-                self.__comments[section][key] = comment
+                try:
+                    self.comments[section][key].append(comment)
+                except KeyError:
+                    self.comments[section][key] = [comment]
             else:
                 raise ValueError("Key must be specified if section is provided")
