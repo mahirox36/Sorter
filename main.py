@@ -36,7 +36,6 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-
 def create_folder_in_appdata(folder_name):
     appdata_folder = pathlib.Path(os.environ["APPDATA"])
     new_folder_path = appdata_folder / folder_name
@@ -50,7 +49,6 @@ def filepath_appdata(filename="Mahiro/Sorter/data.conf"):
     appdata_folder = pathlib.Path(os.environ["APPDATA"])
     file_path = os.path.join(appdata_folder, filename).replace("\\", "/")
     return file_path
-
 
 def is_app_already_running():
     """ Check if the app is already running. """
@@ -163,15 +161,11 @@ def main():
                                 os.rename(filepath, new_filepath)
         time.sleep(data["general"]["Time"])
 
-
-
-
 def open_file(file_path):
     try:
         os.startfile(file_path)
     except Exception as e:
         print("Error opening file:", e)
-
 
 def on_settings():
     open_file(filepath_appdata())
