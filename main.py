@@ -1,6 +1,5 @@
-__version__ = "2.1"
+__version__ = "2.2"
 import os
-import json
 import pathlib
 import time
 import getpass
@@ -12,11 +11,8 @@ from pystray import MenuItem as item
 import pystray
 import psutil
 from Lib.config import Config
+import requests
 # import win10toast
-appdata_folder = pathlib.Path(os.environ["APPDATA"])
-file_path = os.path.join(appdata_folder, "Mahiro/Sorter/data.conf")
-config = Config(file_path)
-Shutdown = False
 
 def create_popup(title ,message, status:str = "info"):
     if status == "info":
@@ -25,6 +21,34 @@ def create_popup(title ,message, status:str = "info"):
         messagebox.showwarning(title, message)
     elif status == "error":
         messagebox.showerror(title, message)
+
+
+# URL to fetch the remote version
+url = "https://raw.githubusercontent.com/mahirox36/Sorter/main/Version.txt"
+
+try:
+    # Fetch the remote version
+    response = requests.get(url)
+    response.raise_for_status()  # Raise an error for bad status codes
+    remote_version = response.text.strip()  # Remove any extra whitespace
+    
+    # Compare versions
+    if float(remote_version) > float(__version__):
+        create_popup("Update",f"New Version is available: {remote_version}, Please Update from the Github Page")
+
+
+except requests.exceptions.RequestException as e:
+    print(f"An error occurred while fetching the remote version: {e}")
+
+
+
+appdata_folder = pathlib.Path(os.environ["APPDATA"])
+file_path = os.path.join(appdata_folder, "Mahiro/Sorter/data.conf")
+config = Config(file_path)
+Shutdown = False
+
+is_paused = False
+
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -137,6 +161,9 @@ def main():
     data = checker(username)
     
     while Shutdown == False:
+        if is_paused:
+            time.sleep(data["general"]["Time"])
+            continue
         data = checker(username)
         if os.path.exists(data["general"]["MainFolderPath"]) == False:
             os.makedirs(data["general"]["MainFolderPath"])
@@ -176,6 +203,15 @@ def on_quit():
     icon.stop()
     thread.join()
 
+def on_pause_clicked(icon, item):
+    global is_paused
+    is_paused = not is_paused
+    # icon.update_menu()
+
+# Function to dynamically check the paused state
+def is_paused_checked(item):
+    return is_paused
+
 if __name__ == "__main__":
     if is_app_already_running() == True:
         create_popup("Sorter", "The App is Already Running","warning")
@@ -185,6 +221,7 @@ if __name__ == "__main__":
         image = Image.open(resource_path("icon.ico"))
         menu = (
             item('Settings', on_settings),
+            item('Pause', on_pause_clicked, checked=is_paused_checked),
             item('Quit', on_quit)
             )
         icon = pystray.Icon("Sorter", image, "Sorter", menu)
