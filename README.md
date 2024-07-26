@@ -1,5 +1,5 @@
 # Sorter
-This App Will Sort Your Files In Folders
+This App Will Sort Your Files In Sub Folders in the Main Folder
 
 ## Requirements
 - Windows Operating System
