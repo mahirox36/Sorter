@@ -6,7 +6,6 @@ Lib/__pycache__/
 __pycache__/
 .vscode/
 test.*
-upload.bat
 output/
 *.iss
 settings.json
@@ -14,4 +13,3 @@ make.py
 icon.*
 data/
 Backup/
-upload.bat
