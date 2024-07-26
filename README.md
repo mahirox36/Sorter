@@ -2,7 +2,8 @@
 This App Will Sort Your Files In Folders
 
 ## Requirements
-Windows Operating System
+- Windows Operating System
+- And a wife (joke)
 
 
 ## How to use
@@ -10,7 +11,7 @@ Windows Operating System
 2. Extract the downloaded file to a directory of your choice.
 3. Double click on the ```Sorter_Installer.exe``` file to start the Installer.
 4. Install The App.
-5. To adjust the settings, you need to modify the ```data.json``` file located at ```%appdata%/Sorter/data.json```.
+5. To adjust the settings, right click to the Icon Tray (Path =  ```%appdata%/Mahiro/Sorter/data.json```).
 6. That's it! The app will now sort your files into folders according to the settings.
 7. If you want portable Version You can See file called ```Sorter.exe```
 
